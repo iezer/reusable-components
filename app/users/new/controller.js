@@ -1,16 +1,17 @@
 import Ember from 'ember';
-import config from "reusable-components/config/environment";
 
 export default Ember.Controller.extend({
+  firstName: null,
+  lastName: null,
+
   actions: {
     saveUser() {
-      if (config.environment === "development") {
+      this.store.createRecord('user', {
+        firstName: this.get('firstName'),
+        lastName: this.get('lastName')
+      }).save().then(() => {
         this.transitionToRoute("users.index");
-      } else {
-        this.get('model').save().then(() => {
-          this.transitionToRoute("users.index");
-        });
-      }
+      });
     }
   }
 });
