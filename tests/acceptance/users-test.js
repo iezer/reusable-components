@@ -97,3 +97,27 @@ test("can create new user", function(assert) {
     expectElement(userInfo(firstName, lastName), 1);
   });
 });
+
+test("shows user creation errors", function(assert) {
+  assert.expect(2);
+  let errorMessage = "save failed";
+  stubRequest('POST', '/users', (request) => {
+    assert.ok(true, 'POST /users api called');
+
+    return request.error({
+      errors: [
+        { detail: errorMessage }
+      ]
+    });
+  });
+
+  visit('/users/new');
+
+  andThen(() => {
+    click('button');
+  });
+
+  andThen(() => {
+    expectElement(`div.error:contains(${errorMessage})`);
+  });
+});
