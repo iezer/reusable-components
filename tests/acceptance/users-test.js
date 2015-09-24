@@ -155,7 +155,7 @@ test("can update user", function(assert) {
   // let newFirstName = "Thelonious", newLastName = "Monk";
   // andThen(() => {
   //   stubRequest('PATCH', '/users/1', (request) => {
-  //     assert.ok(true, 'PATHC  api called');
+  //     assert.ok(true, 'PATCH api called');
 
   //     return request.ok({ data: userData(newFirstName, newLastName) });
   //   });
@@ -166,14 +166,20 @@ test("can update user", function(assert) {
   //     request.ok({ data: [ userData(newFirstName, newLastName) ] } );
   //   });
 
-  //   fillIn('input[name=first]', newFirstName);
-  //   fillIn('input[name=last]', newLastName);
+  //   let firstNameField = find('input[name=firstName]')[0];
+  //   let lastNameField = find('input[name=lastName]')[0];
+
+  //   assert.equal(firstNameField.value, firstName);
+  //   assert.equal(lastNameField.value, lastName);
+
+  //   fillIn(firstNameField, newFirstName);
+  //   fillIn(lastNameField, newLastName);
   //   click('button:contains(Update)');
   // });
 
   // andThen(() => {
-  //   assert.equal(currentURL(), 'users.index', 'redirected to index');
-  //   expectElement(findInfo(newFirstName, newLastName));
+  //   assert.equal(currentURL(), '/users', 'redirected to index');
+  //   expectElement(userInfo(newFirstName, newLastName));
   // });
 });
 

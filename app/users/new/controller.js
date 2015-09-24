@@ -1,8 +1,6 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  firstName: null,
-  lastName: null,
   errorMessage: null,
 
   actions: {
@@ -11,7 +9,7 @@ export default Ember.Controller.extend({
 
       let user = this.get('model');
       user.save().then(() => {
-        this.transitionToRoute("users.index");
+        this.transitionToRoute("users.index"); /* ROUTE!! */
       }).catch((e) => {
         let errorDetails = e.errors.mapBy('detail').join(',');
         this.set('errorMessage', errorDetails);
