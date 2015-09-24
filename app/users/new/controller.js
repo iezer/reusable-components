@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import config from "reusable-components/config/environment";
 
 export default Ember.Controller.extend({
   firstName: null,
@@ -9,12 +8,8 @@ export default Ember.Controller.extend({
   actions: {
     saveUser() {
       this.set("errorMessage", null);
-      let user =
-      this.store.createRecord('user', {
-        firstName: this.get('firstName'),
-        lastName: this.get('lastName')
-      });
 
+      let user = this.get('model');
       user.save().then(() => {
         this.transitionToRoute("users.index");
       }).catch((e) => {

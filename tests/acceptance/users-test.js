@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { module, test } from 'qunit';
+import { module, test, skip } from 'qunit';
 import startApp from 'reusable-components/tests/helpers/start-app';
 import { stubRequest } from "ember-cli-fake-server";
 
@@ -35,6 +35,8 @@ function userInfo(firstName, lastName) {
 test('visiting /users', function(assert) {
   assert.expect(3);
   let firstName = "Thelonious", lastName = "Monk";
+
+  // ember-cli-fake-server
   stubRequest('get', '/users', (request) => {
     assert.ok(true, 'get /users api called');
 
@@ -44,6 +46,8 @@ test('visiting /users', function(assert) {
   visit('/users');
   andThen(() => {
     assert.equal(currentURL(), '/users');
+
+    // ember-cli-acceptance-test-helpers
     expectElement(userInfo(firstName, lastName));
   });
 });
@@ -51,12 +55,14 @@ test('visiting /users', function(assert) {
 test("can create new user", function(assert) {
   assert.expect(4);
   let firstName = "Thelonious", lastName = "Monk";
+
+  //ember-cli-fake-server
   stubRequest('POST', '/users', (request) => {
     assert.ok(true, 'POST /users api called');
     request.created({ data: userData(firstName, lastName) } );
   });
 
-  stubRequest('get', '/users', (request) => {
+  stubRequest('GET', '/users', (request) => {
     assert.ok(true, 'get /users api called');
     request.ok({ data: [ userData(firstName, lastName) ] } );
   });
@@ -66,40 +72,17 @@ test("can create new user", function(assert) {
   andThen(() => {
     fillIn("input[name=firstName]", firstName);
     fillIn("input[name=lastName]", lastName);
-    click("button:contains(Submit)");
+    click("button:contains(Create)");
   });
 
   andThen(() => {
     assert.equal(currentURL(), '/users', 'redirected to index');
-    expectElement(userInfo(firstName, lastName));
-  });
-});
-
-test("can go back to index", function(assert) {
-  assert.expect(3);
-  let firstName = "Thelonious", lastName = "Monk";
-
-  stubRequest('get', '/users', (request) => {
-    assert.ok(true, 'get /users api called');
-    request.ok({ data: [ userData(firstName, lastName) ] } );
-  });
-
-  visit("/users/new");
-
-  andThen(() => {
-    fillIn("input[name=firstName]", firstName);
-    fillIn("input[name=lastName]", lastName);
-    click("a:contains(Index)");
-  });
-
-  andThen(() => {
-    assert.equal(currentURL(), '/users', 'redirected to index');
-    expectElement(userInfo(firstName, lastName), 1);
+    expectElement(userInfo(firstName, lastName)); // ember-cli-acceptance-test-helpers
   });
 });
 
 test("shows user creation errors", function(assert) {
-  assert.expect(2);
+  assert.expect(3);
   let errorMessage = "save failed";
   stubRequest('POST', '/users', (request) => {
     assert.ok(true, 'POST /users api called');
@@ -114,17 +97,43 @@ test("shows user creation errors", function(assert) {
   visit('/users/new');
 
   andThen(() => {
-    click('button');
+    click('button:contains(Create)');
   });
 
   andThen(() => {
     expectElement(`div.error:contains(${errorMessage})`);
+    assert.equal(currentURL(), '/users/new', 'still on new route');
+  });
+});
+
+skip("can exit new route without saving user", function(assert) {
+  assert.expect(4);
+  let firstName = "Thelonious", lastName = "Monk";
+
+  stubRequest('get', '/users', (request) => {
+    assert.ok(true, 'get /users api called');
+    request.ok({ data: [ userData(firstName, lastName) ] } );
+  });
+
+  visit("/users/new");
+
+  let newFirstName = "Louis", newLastName = "Armstrong";
+  andThen(() => {
+    fillIn("input[name=firstName]", newFirstName);
+    fillIn("input[name=lastName]", newLastName);
+    click("a:contains(Index)");
+  });
+
+  andThen(() => {
+    assert.equal(currentURL(), '/users', 'redirected to index');
+    expectElement(userInfo(firstName, lastName), 1);
+    expectNoElement(userInfo(newFirstName, newLastName));
+    //debugger;
   });
 });
 
 test("can update user", function(assert) {
   let firstName = "Louis", lastName = 'Amstrong';
-  let newFN = "Thelonious", newLN = "Monk";
 
   stubRequest('GET', '/users', (request) => {
     assert.ok(true, 'GET /users api called');
@@ -141,5 +150,62 @@ test("can update user", function(assert) {
 
   andThen(() => {
     assert.equal(currentURL(), "/users/1/edit");
+  });
+
+  // let newFirstName = "Thelonious", newLastName = "Monk";
+  // andThen(() => {
+  //   stubRequest('PATCH', '/users/1', (request) => {
+  //     assert.ok(true, 'PATHC  api called');
+
+  //     return request.ok({ data: userData(newFirstName, newLastName) });
+  //   });
+
+  //   stubRequest('GET', '/users', (request) => {
+  //     assert.ok(true, 'GET /users api called');
+
+  //     request.ok({ data: [ userData(newFirstName, newLastName) ] } );
+  //   });
+
+  //   fillIn('input[name=first]', newFirstName);
+  //   fillIn('input[name=last]', newLastName);
+  //   click('button:contains(Update)');
+  // });
+
+  // andThen(() => {
+  //   assert.equal(currentURL(), 'users.index', 'redirected to index');
+  //   expectElement(findInfo(newFirstName, newLastName));
+  // });
+});
+
+skip("shows user update errors", function(assert) {
+  assert.expect(3);
+
+  let firstName = "Louis", lastName = 'Amstrong';
+  stubRequest('GET', '/users/1', (request) => {
+    assert.ok(true, 'GET /users api called');
+
+    request.ok({ data: userData(firstName, lastName) } );
+  });
+
+  let errorMessage = "save failed";
+  stubRequest('PATCH', '/users/1', (request) => {
+    assert.ok(true, 'POST /users api called');
+
+    return request.error({
+      errors: [
+        { detail: errorMessage }
+      ]
+    });
+  });
+
+
+  visit('/users/1/edit');
+
+  andThen(() => {
+    click('button');
+  });
+
+  andThen(() => {
+    expectElement(`div.error:contains(${errorMessage})`);
   });
 });
