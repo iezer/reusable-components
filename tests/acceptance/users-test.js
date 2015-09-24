@@ -163,3 +163,36 @@ test("can update user", function(assert) {
     expectElement(userInfo(newFN, newLN));
   });
 });
+
+test("shows user update errors", function(assert) {
+  assert.expect(3);
+
+  let firstName = "Louis", lastName = 'Amstrong';
+  stubRequest('GET', '/users/1', (request) => {
+    assert.ok(true, 'GET /users api called');
+
+    request.ok({ data: userData(firstName, lastName) } );
+  });
+
+  let errorMessage = "save failed";
+  stubRequest('PATCH', '/users/1', (request) => {
+    assert.ok(true, 'POST /users api called');
+
+    return request.error({
+      errors: [
+        { detail: errorMessage }
+      ]
+    });
+  });
+
+
+  visit('/users/1/edit');
+
+  andThen(() => {
+    click('button');
+  });
+
+  andThen(() => {
+    expectElement(`div.error:contains(${errorMessage})`);
+  });
+});
