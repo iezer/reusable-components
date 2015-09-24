@@ -5,6 +5,10 @@ export default Ember.Component.extend({
   lastName: null,
   errorMessage: null,
 
+  buttonText: Ember.computed(function() {
+    return this.get('model') ? "Update" : "Submit";
+  }),
+
   actions: {
     saveUser() {
       this.set("errorMessage", null);
@@ -12,8 +16,8 @@ export default Ember.Component.extend({
         firstName: this.get('firstName'),
         lastName: this.get('lastName')
       };
-
-      this.sendAction('action', payload);
+      let model = this.get('model');
+      this.sendAction('action', payload, model);
     }
   }
 

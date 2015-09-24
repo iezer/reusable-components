@@ -132,6 +132,12 @@ test("can update user", function(assert) {
     request.ok({ data: [ userData(firstName, lastName) ] } );
   });
 
+  stubRequest('PATCH', '/users/1', (request) => {
+    assert.ok(true, 'GET /users api called');
+
+    request.ok({ data: userData(firstName, lastName) } );
+  });
+
   visit('/users');
 
   andThen(() => {
@@ -141,5 +147,19 @@ test("can update user", function(assert) {
 
   andThen(() => {
     assert.equal(currentURL(), "/users/1/edit");
+    fillIn("input[name=firstName]", newFN);
+    fillIn("input[name=lastName]", newLN);
+
+    stubRequest('GET', '/users/', (request) => {
+      assert.ok(true, 'GET /users api called');
+      request.ok({ data: [ userData(newFN, newLN) ] } );
+    });
+
+    click("button:contains(Update)");
+  });
+
+  andThen(() => {
+    assert.equal(currentURL(), '/users');
+    expectElement(userInfo(newFN, newLN));
   });
 });
