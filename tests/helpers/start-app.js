@@ -12,8 +12,8 @@ export default function startApp(attrs) {
   Ember.run(function() {
     application = Application.create(attributes);
     application.setupForTesting();
-    application.injectTestHelpers();
     registerAcceptanceTestHelpers();
+    application.injectTestHelpers();
   });
 
   return application;
