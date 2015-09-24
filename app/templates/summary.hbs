@@ -1,0 +1,13 @@
+<h2>Creating Reusable Components</h2>
+<ul>
+  <li>Route templates with just a component or series of components will make removing controllers easy.</li>
+  <li>Let routes or services do API calls. Don't scatter model creation and saving in components.</li>
+  <li>Use helpers instead of CPs for simple template strings.</li>
+  <li>Start thinking about potential reuse early in the development phase.</li>
+  <li>If you are using <code>needs</code> in controllers, you probably want a service.</li>
+  <li>Calling <code>this.controller</code> in a route is ok because it will be easy to refactor.</li>
+  <li><code>ember-cli-fake-server</code></li>
+  <li><code>ember-cli-acceptance-test-helpers</code></li>
+</ul>
+
+{{#link-to 'intro'}}Intro{{/link-to}}

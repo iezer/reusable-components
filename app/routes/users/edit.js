@@ -15,6 +15,7 @@ export default Ember.Route.extend({
       }).catch((e) => {
         let errorDetails = e.errors.mapBy('detail').join(',');
         this.controller.set('errorMessage', errorDetails);
+        //rollback
       });
     }
   }

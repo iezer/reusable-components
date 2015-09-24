@@ -10,6 +10,8 @@ Router.map(function() {
     this.route('new');
     this.route('edit', { path: '/:userId/edit'});
   });
+  this.route('intro');
+  this.route('summary');
 });
 
 export default Router;
