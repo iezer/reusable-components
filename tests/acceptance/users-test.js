@@ -75,7 +75,7 @@ test("can create new user", function(assert) {
   });
 });
 
-test("can create new user", function(assert) {
+test("can go back to index", function(assert) {
   assert.expect(3);
   let firstName = "Thelonious", lastName = "Monk";
 
@@ -119,5 +119,27 @@ test("shows user creation errors", function(assert) {
 
   andThen(() => {
     expectElement(`div.error:contains(${errorMessage})`);
+  });
+});
+
+test("can update user", function(assert) {
+  let firstName = "Louis", lastName = 'Amstrong';
+  let newFN = "Thelonious", newLN = "Monk";
+
+  stubRequest('GET', '/users', (request) => {
+    assert.ok(true, 'GET /users api called');
+
+    request.ok({ data: [ userData(firstName, lastName) ] } );
+  });
+
+  visit('/users');
+
+  andThen(() => {
+    expectElement('li a:contains(Edit)');
+    click('a:contains(Edit)');
+  });
+
+  andThen(() => {
+    assert.equal(currentURL(), "/users/1/edit");
   });
 });

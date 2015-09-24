@@ -1,5 +1,7 @@
 <ul>
 {{#each model as |user|}}
-  <li>{{user.id}} {{user.firstName}} {{user.lastName}}</li>
+  <li>{{user.id}} {{user.firstName}} {{user.lastName}}
+    {{#link-to 'users.edit' user.id}}Edit{{/link-to}}
+  </li>
 {{/each}}
 </ul>
