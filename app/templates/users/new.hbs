@@ -1,3 +1,9 @@
+{{#if errorMessage}}
+  <div class='error'>
+    {{errorMessage}}
+  </div>
+{{/if}}
+
 <form {{action "saveUser" on="submit"}}>
   {{input value=firstName type="text" name="firstName"}}
   {{input value=lastName type="text" name="lastName"}}
