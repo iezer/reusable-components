@@ -1,1 +1,11 @@
-{{yield}}
+{{#if errorMessage}}
+  <div class='error' style="color: red;">
+    {{errorMessage}}
+  </div>
+{{/if}}
+
+<form {{action "saveUser" on="submit"}}>
+  {{input value=firstName type="text" name="firstName" placeholder="first name"}}
+  {{input value=lastName type="text" name="lastName" placeholder="last name"}}
+  <button type="submit">{{submit-button model}}</button>
+</form>

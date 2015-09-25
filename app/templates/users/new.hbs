@@ -1,11 +1,1 @@
-{{#if errorMessage}}
-  <div class='error' style="color: red;">
-    {{errorMessage}}
-  </div>
-{{/if}}
-
-<form {{action "saveUser" on="submit"}}>
-  {{input value=model.firstName type="text" name="firstName" placeholder="first name"}}
-  {{input value=model.lastName type="text" name="lastName" placeholder="last name"}}
-  <button type="submit">Create</button>
-</form>
+{{user-form action="saveUser" errorMessage=errorMessage}}
