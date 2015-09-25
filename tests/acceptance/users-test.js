@@ -69,11 +69,9 @@ test("can create new user", function(assert) {
 
   visit("/users/new");
 
-  andThen(() => {
-    fillIn("input[name=firstName]", firstName);
-    fillIn("input[name=lastName]", lastName);
-    click("button:contains(Create)");
-  });
+  fillIn("input[name=firstName]", firstName);
+  fillIn("input[name=lastName]", lastName);
+  click("button:contains(Create)");
 
   andThen(() => {
     assert.equal(currentURL(), '/users', 'redirected to index');
@@ -96,9 +94,7 @@ test("shows user creation errors", function(assert) {
 
   visit('/users/new');
 
-  andThen(() => {
-    click('button:contains(Create)');
-  });
+  click('button:contains(Create)');
 
   andThen(() => {
     expectElement(`div.error:contains(${errorMessage})`);
@@ -106,7 +102,7 @@ test("shows user creation errors", function(assert) {
   });
 });
 
-skip("can exit new route without saving user", function(assert) {
+test("can exit new route without saving user", function(assert) {
   assert.expect(4);
   let firstName = "Thelonious", lastName = "Monk";
 
@@ -118,21 +114,18 @@ skip("can exit new route without saving user", function(assert) {
   visit("/users/new");
 
   let newFirstName = "Louis", newLastName = "Armstrong";
-  andThen(() => {
-    fillIn("input[name=firstName]", newFirstName);
-    fillIn("input[name=lastName]", newLastName);
-    click("a:contains(Index)");
-  });
+  fillIn("input[name=firstName]", newFirstName);
+  fillIn("input[name=lastName]", newLastName);
+  click("a:contains(Index)");
 
   andThen(() => {
     assert.equal(currentURL(), '/users', 'redirected to index');
     expectElement(userInfo(firstName, lastName), 1);
     expectNoElement(userInfo(newFirstName, newLastName));
-    //debugger;
   });
 });
 
-skip("can update user", function(assert) {
+test("can update user", function(assert) {
   let firstName = "Louis", lastName = 'Amstrong';
 
   stubRequest('GET', '/users', (request) => {
@@ -145,8 +138,10 @@ skip("can update user", function(assert) {
 
   andThen(() => {
     expectElement('li a:contains(Edit)');
-    click('a:contains(Edit)');
+
   });
+
+  click('a:contains(Edit)');
 
   andThen(() => {
     assert.equal(currentURL(), "/users/1/edit");
@@ -174,9 +169,9 @@ skip("can update user", function(assert) {
 
       request.ok({ data: [ userData(newFirstName, newLastName) ] } );
     });
-
-    click('button:contains(Update)');
   });
+
+  click('button:contains(Update)');
 
   andThen(() => {
     assert.equal(currentURL(), '/users', 'redirected to index');
@@ -184,7 +179,7 @@ skip("can update user", function(assert) {
   });
 });
 
-skip("shows user update errors", function(assert) {
+test("shows user update errors", function(assert) {
   assert.expect(3);
 
   let firstName = "Louis", lastName = 'Amstrong';
@@ -207,10 +202,7 @@ skip("shows user update errors", function(assert) {
 
 
   visit('/users/1/edit');
-
-  andThen(() => {
-    click('button');
-  });
+  click('button');
 
   andThen(() => {
     expectElement(`div.error:contains(${errorMessage})`);
