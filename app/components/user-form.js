@@ -12,7 +12,7 @@ export default Ember.Component.extend({
         lastName: this.get('lastName')
       };
 
-      this.sendAction('action', payload, this.get('model'));
+      this.attrs.action(payload, this.get('model'));
     }
   }
 });

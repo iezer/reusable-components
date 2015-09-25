@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { module, test, skip } from 'qunit';
+import { module, test } from 'qunit';
 import startApp from 'reusable-components/tests/helpers/start-app';
 import { stubRequest } from "ember-cli-fake-server";
 
